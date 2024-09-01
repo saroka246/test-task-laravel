@@ -1,11 +1,21 @@
 <?php
 
+use App\Http\Controllers\TokenController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\UserController;
+use Illuminate\Support\Facades\Auth;
 
 Route::get('/user', function (Request $request) {
-    return $request->user();
+    return Auth::user()->token();
 })->middleware('auth:api');
+
+Route::get('/sessions', [TokenController::class, 'index'])->middleware('auth:api');
+Route::delete('/sessions/{id}', [TokenController::class, 'destroy'])->middleware('auth:api');
+
+Route::post('/register', [UserController::class, 'register']);
+Route::post('/login', [UserController::class, 'login']);
+Route::post('/logout', [UserController::class, 'logout'])->middleware('auth:api');
 
 Route::group([
     'as' => 'passport.',
@@ -24,9 +34,7 @@ Route::group([
         'middleware' => 'web',
     ]);
 
-    $guard = config('passport.guard', null);
-
-    Route::middleware(['web', $guard ? 'auth:'.$guard : 'auth'])->group(function () {
+    Route::middleware('auth:api')->group(function () {
         Route::post('/token/refresh', [
             'uses' => 'TransientTokenController@refresh',
             'as' => 'token.refresh',
