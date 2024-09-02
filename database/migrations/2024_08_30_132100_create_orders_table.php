@@ -20,7 +20,7 @@ return new class extends Migration
             $table->dateTimeTz('date')->comment('Дата исполнения заказа');
             $table->string('address')->nullable()->comment('Адрес заказа');
             $table->integer('amount')->nullable()->comment('Кол-во');
-            $table->enum('status',['Создан','Назначен Исполнитель','Завершен'])->comment('Статус заказа');
+            $table->enum('status',['Создан','Назначен Исполнитель','Завершен'])->index()->comment('Статус заказа');
             $table->timestamps();
 
             $table->foreign('type_id')->references('id')->on('order_types');

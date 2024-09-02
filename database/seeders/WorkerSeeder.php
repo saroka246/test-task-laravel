@@ -2,9 +2,10 @@
 
 namespace Database\Seeders;
 
+use App\Models\OrderType;
 use App\Models\Worker;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Arr;
 
 class WorkerSeeder extends Seeder
 {
@@ -13,6 +14,14 @@ class WorkerSeeder extends Seeder
      */
     public function run(): void
     {
-        Worker::factory(50)->create();
+        $workers = Worker::factory(50)->create();
+
+        $order_types = OrderType::pluck('id')->toArray();
+
+        $workers->each(function ($worker) use ($order_types){
+            $worker->excludedOrderTypes()->attach(
+              Arr::random($order_types, rand(1,2))
+            );
+        });
     }
 }
