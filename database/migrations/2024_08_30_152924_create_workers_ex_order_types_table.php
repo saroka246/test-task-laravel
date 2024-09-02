@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('workers_ex_order_types', function (Blueprint $table) {
             $table->unsignedBigInteger('worker_id')->comment('ID исполнителя');
             $table->unsignedBigInteger('type_id')->comment('ID типа заказа, с которым НЕ работает исполнитель');
-            $table->timestamps();
 
             $table->foreign('worker_id')->references('id')->on('workers');
             $table->foreign('type_id')->references('id')->on('order_types');

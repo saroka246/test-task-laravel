@@ -2,12 +2,18 @@
 
 namespace App\Models;
 
+use App\Traits\UniversalFilterTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+
+/**
+ * @method static filter(FilterRequest $filterRequest) - реализация фильтра
+ */
 
 class Worker extends Model
 {
-    use HasFactory;
+    use HasFactory, UniversalFilterTrait;
 
     protected $fillable = [
         'name',
@@ -16,5 +22,8 @@ class Worker extends Model
         'phone'
     ];
 
-
+    public function excludedOrderTypes(): BelongsToMany
+    {
+        return $this->belongsToMany(OrderType::class, 'workers_ex_order_types','worker_id','type_id');
+    }
 }

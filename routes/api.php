@@ -1,14 +1,11 @@
 <?php
 
 use App\Http\Controllers\TokenController;
-use Illuminate\Http\Request;
+use App\Http\Controllers\WorkerController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
-use Illuminate\Support\Facades\Auth;
 
-Route::get('/user', function (Request $request) {
-    return Auth::user()->token();
-})->middleware('auth:api');
+Route::get('/workers', [WorkerController::class, 'index'])->middleware('auth:api');
 
 Route::get('/sessions', [TokenController::class, 'index'])->middleware('auth:api');
 Route::delete('/sessions/{id}', [TokenController::class, 'destroy'])->middleware('auth:api');
