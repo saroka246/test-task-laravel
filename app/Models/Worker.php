@@ -26,4 +26,9 @@ class Worker extends Model
     {
         return $this->belongsToMany(OrderType::class, 'workers_ex_order_types','worker_id','type_id');
     }
+
+    public function orders(): BelongsToMany
+    {
+        return $this->belongsToMany(Order::class, 'order_worker');
+    }
 }

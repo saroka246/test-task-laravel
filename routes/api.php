@@ -1,18 +1,25 @@
 <?php
 
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\TokenController;
 use App\Http\Controllers\WorkerController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 
-Route::get('/workers', [WorkerController::class, 'index'])->middleware('auth:api');
-
-Route::get('/sessions', [TokenController::class, 'index'])->middleware('auth:api');
-Route::delete('/sessions/{id}', [TokenController::class, 'destroy'])->middleware('auth:api');
-
 Route::post('/register', [UserController::class, 'register']);
 Route::post('/login', [UserController::class, 'login']);
-Route::post('/logout', [UserController::class, 'logout'])->middleware('auth:api');
+
+Route::middleware('auth:api')->group(function () {
+    Route::get('/workers', [WorkerController::class, 'index'])->middleware('auth:api');
+
+    Route::post('/orders',[OrderController::class, 'create'])->middleware('auth:api');
+    Route::post('/orders/{id}',[OrderController::class, 'update'])->middleware('auth:api');
+
+    Route::get('/sessions', [TokenController::class, 'index'])->middleware('auth:api');
+    Route::delete('/sessions/{id}', [TokenController::class, 'destroy'])->middleware('auth:api');
+
+    Route::post('/logout', [UserController::class, 'logout'])->middleware('auth:api');
+});
 
 Route::group([
     'as' => 'passport.',
